@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  ArrowLeft,
-  ImagePlus,
-  Loader2,
-  Plus,
-  Send,
-  X,
-} from "lucide-react";
+import { ArrowLeft,  Loader2, Plus, Send, X } from "lucide-react";
 import { useState } from "react";
+import Form from "next/form"
+import { create } from "@/actions/create";
 
 function CreateBlogForm() {
   const [tags, setTags] = useState<string[]>([]);
@@ -21,12 +16,13 @@ function CreateBlogForm() {
     excerpt: "",
     category: "",
     content: "",
+    thumbnail:""
   });
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     setFormData({
       ...formData,
@@ -111,7 +107,7 @@ function CreateBlogForm() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit}>
+        <Form action={create} onSubmit={handleSubmit}>
           <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
             {/* Main editor */}
             <div className="space-y-7">
@@ -159,10 +155,7 @@ function CreateBlogForm() {
               {/* Content */}
               <section className="rounded-3xl border bg-card p-6 md:p-8">
                 <div className="mb-4 flex items-center justify-between">
-                  <label
-                    htmlFor="content"
-                    className="text-sm font-semibold"
-                  >
+                  <label htmlFor="content" className="text-sm font-semibold">
                     Article content
                   </label>
 
@@ -183,23 +176,22 @@ function CreateBlogForm() {
                 />
               </section>
 
+             
               {/* Cover image */}
               <section className="rounded-3xl border bg-card p-6 md:p-8">
                 <div className="mb-5">
                   <h2 className="text-sm font-semibold">Cover image</h2>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Add a visual that represents your article.
+                    Add an image URL for your article cover.
                   </p>
                 </div>
 
-   
-
-                  <input
-                 
-                  
-                    className=""
-                  />
-              
+                <input
+                  type="url"
+                  name="image"
+                  placeholder="https://example.com/image.jpg"
+                  className="h-12 w-full rounded-xl border bg-background px-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
+                />
               </section>
             </div>
 
@@ -231,9 +223,7 @@ function CreateBlogForm() {
                       <option value="Next.js">Next.js</option>
                       <option value="JavaScript">JavaScript</option>
                       <option value="TypeScript">TypeScript</option>
-                      <option value="Web Development">
-                        Web Development
-                      </option>
+                      <option value="Web Development">Web Development</option>
                       <option value="Career">Career</option>
                     </select>
                   </div>
@@ -241,9 +231,7 @@ function CreateBlogForm() {
                   {/* Featured */}
                   <div className="flex items-center justify-between rounded-xl border p-4">
                     <div>
-                      <p className="text-sm font-medium">
-                        Featured article
-                      </p>
+                      <p className="text-sm font-medium">Featured article</p>
                       <p className="mt-1 text-xs text-muted-foreground">
                         Show on homepage
                       </p>
@@ -253,9 +241,7 @@ function CreateBlogForm() {
                       type="button"
                       onClick={() => setIsFeatured(!isFeatured)}
                       className={`relative h-6 w-11 rounded-full transition ${
-                        isFeatured
-                          ? "bg-foreground"
-                          : "bg-muted"
+                        isFeatured ? "bg-foreground" : "bg-muted"
                       }`}
                     >
                       <span
@@ -353,7 +339,7 @@ function CreateBlogForm() {
               </button>
             </aside>
           </div>
-        </form>
+        </Form>
       </div>
     </main>
   );
