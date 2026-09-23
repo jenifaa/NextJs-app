@@ -1,4 +1,6 @@
 import BlogCard from "@/components/modules/Blogs/BlogCard";
+import ContactUs from "@/components/modules/Home/ContactUs";
+import FAQ from "@/components/modules/Home/FAQ";
 import Hero from "@/components/modules/Home/Hero";
 import { IBlog } from "@/types";
 
@@ -26,6 +28,8 @@ export default async function HomePage() {
           <BlogCard key={blog.id} post={blog} />
         ))}
       </div>
+      <ContactUs></ContactUs>
+      <FAQ></FAQ>
     </div>
   );
 }
