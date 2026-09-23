@@ -10,6 +10,25 @@ export const generateStaticParams = async () => {
     blogId: String(blog.id),
   }));
 };
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ blogId: string }>;
+}) => {
+  const { blogId } = await params;
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post/${blogId}`);
+
+  const result = await res.json();
+
+   return {
+    title: result.data?.title || "Blog Details",
+    description: result.data?.excerpt || "Read this blog",
+  };
+};
+
+
+
 
 const BlogDetailsPage = async ({
   params,
