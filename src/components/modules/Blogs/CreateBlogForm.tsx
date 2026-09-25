@@ -1,28 +1,23 @@
 "use client";
 
-import { ArrowLeft,  Loader2, Plus, Send, X } from "lucide-react";
+import { ArrowLeft,  Plus, Send, X } from "lucide-react";
 import { useState } from "react";
-import Form from "next/form"
+import Form from "next/form";
 import { create } from "@/actions/create";
 
 function CreateBlogForm() {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
-  const [isPublishing, setIsPublishing] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
-    excerpt: "",
-    category: "",
     content: "",
-    thumbnail:""
+    thumbnail: "",
   });
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFormData({
       ...formData,
@@ -48,26 +43,6 @@ function CreateBlogForm() {
       e.preventDefault();
       handleAddTag();
     }
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsPublishing(true);
-
-    const blogData = {
-      ...formData,
-      tags,
-      isFeatured,
-    };
-
-    console.log(blogData);
-
-    // Connect your API here
-
-    setTimeout(() => {
-      setIsPublishing(false);
-    }, 1000);
   };
 
   return (
@@ -107,7 +82,16 @@ function CreateBlogForm() {
         </div>
 
         {/* Form */}
-        <Form action={create} onSubmit={handleSubmit}>
+        <Form action={create}>
+          {/* Hidden fields for state values */}
+          <input type="hidden" name="tags" value={tags.join(",")} />
+
+          <input
+            type="hidden"
+            name="isFeatured"
+            value={isFeatured.toString()}
+          />
+
           <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
             {/* Main editor */}
             <div className="space-y-7">
@@ -129,26 +113,6 @@ function CreateBlogForm() {
                   onChange={handleChange}
                   required
                   className="w-full border-none bg-transparent text-3xl font-bold tracking-tight outline-none placeholder:text-muted-foreground/50 md:text-4xl"
-                />
-
-                <div className="mt-6 h-px bg-border" />
-
-                <label
-                  htmlFor="excerpt"
-                  className="mb-3 mt-6 block text-sm font-semibold"
-                >
-                  Short description
-                </label>
-
-                <textarea
-                  id="excerpt"
-                  name="excerpt"
-                  rows={3}
-                  placeholder="Give your readers a short introduction to this article..."
-                  value={formData.excerpt}
-                  onChange={handleChange}
-                  required
-                  className="w-full resize-none rounded-xl border bg-background p-4 text-sm leading-6 outline-none transition placeholder:text-muted-foreground focus:border-primary"
                 />
               </section>
 
@@ -176,20 +140,23 @@ function CreateBlogForm() {
                 />
               </section>
 
-             
               {/* Cover image */}
               <section className="rounded-3xl border bg-card p-6 md:p-8">
                 <div className="mb-5">
                   <h2 className="text-sm font-semibold">Cover image</h2>
+
                   <p className="mt-1 text-xs text-muted-foreground">
                     Add an image URL for your article cover.
                   </p>
                 </div>
 
                 <input
+                  id="thumbnail"
                   type="url"
-                  name="image"
+                  name="thumbnail"
                   placeholder="https://example.com/image.jpg"
+                  value={formData.thumbnail}
+                  onChange={handleChange}
                   className="h-12 w-full rounded-xl border bg-background px-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
                 />
               </section>
@@ -202,36 +169,11 @@ function CreateBlogForm() {
                 <h2 className="text-sm font-semibold">Publishing</h2>
 
                 <div className="mt-5 space-y-5">
-                  <div>
-                    <label
-                      htmlFor="category"
-                      className="mb-2 block text-sm font-medium"
-                    >
-                      Category
-                    </label>
-
-                    <select
-                      id="category"
-                      name="category"
-                      value={formData.category}
-                      onChange={handleChange}
-                      required
-                      className="h-11 w-full rounded-xl border bg-background px-3 text-sm outline-none focus:border-primary"
-                    >
-                      <option value="">Select category</option>
-                      <option value="React">React</option>
-                      <option value="Next.js">Next.js</option>
-                      <option value="JavaScript">JavaScript</option>
-                      <option value="TypeScript">TypeScript</option>
-                      <option value="Web Development">Web Development</option>
-                      <option value="Career">Career</option>
-                    </select>
-                  </div>
-
                   {/* Featured */}
                   <div className="flex items-center justify-between rounded-xl border p-4">
                     <div>
                       <p className="text-sm font-medium">Featured article</p>
+
                       <p className="mt-1 text-xs text-muted-foreground">
                         Show on homepage
                       </p>
@@ -322,20 +264,10 @@ function CreateBlogForm() {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={isPublishing}
-                className="group flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-foreground px-5 py-3.5 text-sm font-semibold text-background transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+                className="group flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-foreground px-5 py-3.5 text-sm font-semibold text-background transition hover:opacity-90"
               >
-                {isPublishing ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Publishing...
-                  </>
-                ) : (
-                  <>
-                    Publish article
-                    <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </>
-                )}
+                Publish article
+                <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </button>
             </aside>
           </div>
