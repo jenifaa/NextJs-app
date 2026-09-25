@@ -1,5 +1,5 @@
 
-
+"use client";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -56,6 +56,9 @@ export default function BlogDetailsCard({
         day: "numeric",
       })
     : "";
+
+
+    
 
   return (
     <main className="min-h-screen bg-background">

@@ -1,49 +1,12 @@
 "use client";
 
-import { ArrowLeft,  Plus, Send, X } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import Form from "next/form";
 import { create } from "@/actions/create";
 
 function CreateBlogForm() {
-  const [tags, setTags] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState("");
-  const [isFeatured, setIsFeatured] = useState(false);
-
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    thumbnail: "",
-  });
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleAddTag = () => {
-    const tag = tagInput.trim();
-
-    if (!tag || tags.includes(tag)) return;
-
-    setTags([...tags, tag]);
-    setTagInput("");
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddTag();
-    }
-  };
+  const [isFeatured, setIsFeatured] = useState("false");
 
   return (
     <main className="min-h-screen bg-background px-5 py-10 md:px-8 lg:px-12">
@@ -81,196 +44,103 @@ function CreateBlogForm() {
           </div>
         </div>
 
-        {/* Form */}
-        <Form action={create}>
-          {/* Hidden fields for state values */}
-          <input type="hidden" name="tags" value={tags.join(",")} />
+        <Form
+          action={create}
+          className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-4 w-full"
+        >
+          <h2 className="text-xl font-semibold mb-4">Create Blog</h2>
 
-          <input
-            type="hidden"
-            name="isFeatured"
-            value={isFeatured.toString()}
-          />
-
-          <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
-            {/* Main editor */}
-            <div className="space-y-7">
-              {/* Title */}
-              <section className="rounded-3xl border bg-card p-6 md:p-8">
-                <label
-                  htmlFor="title"
-                  className="mb-3 block text-sm font-semibold"
-                >
-                  Blog title
-                </label>
-
-                <input
-                  id="title"
-                  name="title"
-                  type="text"
-                  placeholder="Write an engaging title..."
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                  className="w-full border-none bg-transparent text-3xl font-bold tracking-tight outline-none placeholder:text-muted-foreground/50 md:text-4xl"
-                />
-              </section>
-
-              {/* Content */}
-              <section className="rounded-3xl border bg-card p-6 md:p-8">
-                <div className="mb-4 flex items-center justify-between">
-                  <label htmlFor="content" className="text-sm font-semibold">
-                    Article content
-                  </label>
-
-                  <span className="text-xs text-muted-foreground">
-                    Markdown supported
-                  </span>
-                </div>
-
-                <textarea
-                  id="content"
-                  name="content"
-                  rows={20}
-                  placeholder="Start writing your story..."
-                  value={formData.content}
-                  onChange={handleChange}
-                  required
-                  className="w-full resize-none rounded-2xl border bg-background p-5 text-sm leading-7 outline-none transition placeholder:text-muted-foreground focus:border-primary"
-                />
-              </section>
-
-              {/* Cover image */}
-              <section className="rounded-3xl border bg-card p-6 md:p-8">
-                <div className="mb-5">
-                  <h2 className="text-sm font-semibold">Cover image</h2>
-
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Add an image URL for your article cover.
-                  </p>
-                </div>
-
-                <input
-                  id="thumbnail"
-                  type="url"
-                  name="thumbnail"
-                  placeholder="https://example.com/image.jpg"
-                  value={formData.thumbnail}
-                  onChange={handleChange}
-                  className="h-12 w-full rounded-xl border bg-background px-4 text-sm outline-none transition placeholder:text-muted-foreground focus:border-primary"
-                />
-              </section>
-            </div>
-
-            {/* Sidebar */}
-            <aside className="space-y-6">
-              {/* Publishing */}
-              <section className="rounded-3xl border bg-card p-6">
-                <h2 className="text-sm font-semibold">Publishing</h2>
-
-                <div className="mt-5 space-y-5">
-                  {/* Featured */}
-                  <div className="flex items-center justify-between rounded-xl border p-4">
-                    <div>
-                      <p className="text-sm font-medium">Featured article</p>
-
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        Show on homepage
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setIsFeatured(!isFeatured)}
-                      className={`relative h-6 w-11 rounded-full transition ${
-                        isFeatured ? "bg-foreground" : "bg-muted"
-                      }`}
-                    >
-                      <span
-                        className={`absolute top-1 h-4 w-4 rounded-full bg-background transition ${
-                          isFeatured ? "left-6" : "left-1"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </div>
-              </section>
-
-              {/* Tags */}
-              <section className="rounded-3xl border bg-card p-6">
-                <h2 className="text-sm font-semibold">Tags</h2>
-
-                <p className="mt-1 text-xs text-muted-foreground">
-                  Add topics related to your article.
-                </p>
-
-                <div className="mt-4 flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Add a tag"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(e.target.value)}
-                    onKeyDown={handleTagKeyDown}
-                    className="h-10 min-w-0 flex-1 rounded-xl border bg-background px-3 text-sm outline-none focus:border-primary"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={handleAddTag}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border transition hover:bg-muted"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-
-                {tags.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-xs font-medium"
-                      >
-                        {tag}
-
-                        <button
-                          type="button"
-                          onClick={() => handleRemoveTag(tag)}
-                          className="text-muted-foreground transition hover:text-foreground"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </section>
-
-              {/* Tips */}
-              <section className="rounded-3xl border bg-foreground p-6 text-background">
-                <p className="text-xs font-semibold uppercase tracking-wider opacity-60">
-                  Writing tip
-                </p>
-
-                <p className="mt-4 text-lg font-medium leading-7">
-                  Write for humans first. Make every paragraph useful.
-                </p>
-
-                <p className="mt-3 text-sm leading-6 opacity-60">
-                  Keep your introduction clear, use meaningful headings, and
-                  make your examples practical.
-                </p>
-              </section>
-
-              {/* Submit */}
-              <button
-                type="submit"
-                className="group flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-foreground px-5 py-3.5 text-sm font-semibold text-background transition hover:opacity-90"
-              >
-                Publish article
-                <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </button>
-            </aside>
+          {/* Title */}
+          <div>
+            <label className="block text-sm font-medium mb-1" htmlFor="title">
+              Title
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              className="w-full rounded-md border px-3 py-2 focus:ring focus:ring-blue-200"
+            />
           </div>
+
+          {/* Content */}
+          <div>
+            <label className="block text-sm font-medium mb-1" htmlFor="content">
+              Content
+            </label>
+            <textarea
+              id="content"
+              name="content"
+              rows={4}
+              className="w-full rounded-md border px-3 py-2 focus:ring focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Thumbnail */}
+          <div>
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="thumbnail"
+            >
+              Thumbnail URL
+            </label>
+            <input
+              type="url"
+              id="thumbnail"
+              name="thumbnail"
+              className="w-full rounded-md border px-3 py-2 focus:ring focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-medium mb-1" htmlFor="tags">
+              Tags (comma separated)
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              placeholder="Next.js, React, Web Development"
+              className="w-full rounded-md border px-3 py-2 focus:ring focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Featured */}
+          <div>
+            <p className="block text-sm font-medium mb-1">Featured</p>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="isFeatured"
+                  value="true"
+                  checked={isFeatured === "true"}
+                  onChange={(e) => setIsFeatured(e.target.value)}
+                  className="text-blue-600 focus:ring-blue-500"
+                />
+                Yes
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="isFeatured"
+                  value="false"
+                  checked={isFeatured === "false"}
+                  onChange={(e) => setIsFeatured(e.target.value)}
+                  className="text-blue-600 focus:ring-blue-500"
+                />
+                No
+              </label>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white font-medium py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Submit
+          </button>
         </Form>
       </div>
     </main>

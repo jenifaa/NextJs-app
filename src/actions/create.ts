@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const create = async (data: FormData) => {
@@ -11,11 +12,10 @@ export const create = async (data: FormData) => {
       .toString()
       .split(",")
       .map((tag) => tag.trim()),
-    isFeatured: blogInfo.isFeatured === "true",
+    isFeatured: Boolean(blogInfo.isFeatured),
   };
-  console.log(modifiedData);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post/create`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -23,7 +23,8 @@ export const create = async (data: FormData) => {
     body: JSON.stringify(modifiedData),
   });
   const result = await res.json();
-  if (result) {
+  if (result?.id) {
+    revalidateTag("BLOGS");
     redirect("/blogs");
   }
   return result;
