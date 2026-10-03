@@ -1,5 +1,4 @@
-import { authOptions } from "@/helpers/authOptions";
-import { getServerSession } from "next-auth";
+
 import {
   ArrowUpRight,
   BarChart3,

@@ -4,13 +4,26 @@ import { getBlogById } from "@/services/PostServices";
 
 export const generateStaticParams = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_API}/post`);
+
+  if (!res.ok) {
+    return [];
+  }
+
   const result = await res.json();
-  const blogs = result.data;
+
+  const blogs = result.data ?? [];
 
   return blogs.slice(0, 2).map((blog: any) => ({
     blogId: String(blog.id),
   }));
 };
+
+
+
+
+
+
+
 export const generateMetadata = async ({
   params,
 }: {
