@@ -1,6 +1,6 @@
 import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/Navbar/Navbar";
-import { Toaster } from "sonner";
+
 
 export default function PublicLayout({
   children,
@@ -11,7 +11,7 @@ export default function PublicLayout({
     <>
       <Navbar />
       <main className="min-h-dvh">{children}</main>
-      <Toaster></Toaster>
+     
       <Footer />
     </>
   );

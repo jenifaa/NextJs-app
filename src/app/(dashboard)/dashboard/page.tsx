@@ -7,9 +7,10 @@ import {
   MessageSquare,
   Users,
 } from "lucide-react";
+import { getUserSession } from "@/helpers/getUserSession";
 
 const DashboardHomePage = async () => {
-  const session = await getServerSession(authOptions);
+  const session = await getUserSession();
 
   const userName = session?.user?.name || "User";
 
